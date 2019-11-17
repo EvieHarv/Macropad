@@ -1,0 +1,87 @@
+{
+    "manifest_version": 2,
+    "name": "SoundFinder",
+    "version": "4.2",
+  
+    "permissions": ["tabs", "storage", "webRequest", "<all_urls>", "*://*.youtube.com/*"],
+
+    "description": "Finds youtube pages w/ sound.",
+
+    "icons": {
+      "48": "icons/icon.png"
+    },
+    
+    "background": {
+        "scripts": ["Soundfinder.js"]
+    },
+    
+    
+      "commands": {
+        "playPause": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+0"
+          },
+          "description": "Play/Pause scoped tab."
+        },        
+        "volumeUp": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+1"
+          },
+          "description": "Increase volume on scoped tab."
+        },
+        "volumeDown": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+2"
+          },
+          "description": "Decrease volume on scoped tab."
+        },
+        "listFW": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+3"
+          },
+          "description": "Go to next specified video/song on scoped tab."
+        },
+        "listBW": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+4"
+          },
+          "description": "Go to previous specified video/song volume on scoped tab. (Or, last youtube page on a non-playlist youtube tab.)"
+        },
+        "timeFW": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+5"
+          },
+          "description": "Skip forewards."
+        },
+        "timeBW": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+6"
+          },
+          "description": "Skip backwards."
+        },
+        "multiUp": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+7"
+          },
+          "description": "Youtube: Increase speed. -- Music: Like song."
+        },
+        "multiDown": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+8"
+          },
+          "description": "Youtube: Decrease speed. -- Music: Disike song."
+        },
+        "multiL": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+Up"
+          },
+          "description": "Go to the youtube page to the left of current one. - Unimpletmented, honestly dont plan to implement."
+        },
+        "multiR": {
+          "suggested_key": {
+            "default": "Ctrl+Alt+Down"
+          },
+          "description": "Go to the youtube page to the right of current one. - Unimpletmented, honestly dont plan to implement."
+        }
+      }
+}
