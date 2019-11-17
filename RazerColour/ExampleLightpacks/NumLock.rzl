@@ -1,0 +1,5 @@
+; Just the NumLock key, used for NumpadDefault indication.
+
+RGB 444444
+
+NumLock

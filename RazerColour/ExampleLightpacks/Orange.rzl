@@ -1,0 +1,24 @@
+rgb ff4800 ; Don't remember this color, was using this file to show someone the easy scripting capabilities.
+
+q
+w
+e
+r
+t
+y
+u
+i
+o
+p
+
+rgb b010a0 ; This is purple.
+
+a 
+s
+d ; hello this is ignored by the compiler.
+f
+g
+h
+j
+k
+l
