@@ -75,13 +75,13 @@
           "suggested_key": {
             "default": "Ctrl+Alt+Up"
           },
-          "description": "Go to the youtube page to the left of current one. - Unimpletmented, honestly dont plan to implement."
+          "description": "Youtube: Set Speed to regular 1x -- Music: Cycle loop mode"
         },
         "multiR": {
           "suggested_key": {
             "default": "Ctrl+Alt+Down"
           },
-          "description": "Go to the youtube page to the right of current one. - Unimpletmented, honestly dont plan to implement."
+          "description": "Youtube: Set Speed to 2x -- Music: Shuffle"
         }
       }
 }
