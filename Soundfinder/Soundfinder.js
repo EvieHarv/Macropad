@@ -164,14 +164,14 @@ async function requestEvent(command, scope)
                 // and y'know what?
                 // im happy.
                 // its done.
-                // i can lay this project to rest, knowing that i endured through countless hours, (probably legitimately approaching 10+ hours on this function), and that it payed off.
+                // i can lay this project to rest, knowing that i endured through countless hours, (probably legitimately approaching 20+ hours on this function), and that it payed off.
                 // and with that
                 // i wish you a good day
                 // and goodbye
-                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value += 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);"});
+                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value += 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);script.remove();"});
                 break;
             case "volumeDown": // see above.
-                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value -= 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);"});
+                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value -= 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);script.remove();"});
                 break;
             case "listFW": // fine
                 browser.tabs.executeScript(scope.id, {code: "document.getElementsByClassName(\"next-button style-scope ytmusic-player-bar\")[0].click()"});
