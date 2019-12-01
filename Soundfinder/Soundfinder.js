@@ -148,11 +148,30 @@ async function requestEvent(command, scope)
                 browser.tabs.executeScript(scope.id, {code: "if(document.getElementsByTagName(\"video\")[0].paused)document.getElementsByTagName(\"video\")[0].play(); else document.getElementsByTagName(\"video\")[0].pause()"});
                 //browser.tabs.executeScript(scope.id, {code: "if(player.playerApi_.getPlayerState() === 2) {player.playerApi_.playVideo()} else {player.playerApi_.pauseVideo()}"});
                 break;
-            case "volumeUp": // Obsolete
-                //browser.tabs.executeScript(scope.id, {code: "document.getElementById('volume-slider').value += 5"});
+            case "volumeUp": 
+                // this is REALLY BAD CODE BUT OH MY GOD IVE BEEN TRYING TO DO THIS FOR MONTHS AND THIS IS THE ONLY THING THAT WORKS
+                // im not even joking. this one function has caused me so much pain.
+                // it's the middle of the night, its dark, im alone in my room, and im sheding real, actual tears while moving a digital slider back and forth
+                // my. god. man.
+                // in hindsight its not even that hard, its a really simple function with a direct workaround, but i just never stumbled across the right thing until now.
+                // perserverence, i guess.
+                // maybe a better dev would've found it faster
+                // maybe if i actually knew literally any javascript before this project i'd have done better
+                // maybe if i actually learned more in-depth how web pages process things before i started i'd have found an answer quicker
+                // but i dont care
+                // ive tried, and im not using hyperbole here, probably over fifty entirely different functions for this one thing
+                // and this is the one that finally works
+                // and y'know what?
+                // im happy.
+                // its done.
+                // i can lay this project to rest, knowing that i endured through countless hours, (probably legitimately approaching 10+ hours on this function), and that it payed off.
+                // and with that
+                // i wish you a good day
+                // and goodbye
+                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value += 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);"});
                 break;
-            case "volumeDown": // Obsolete
-                //browser.tabs.executeScript(scope.id, {code: "document.getElementById('volume-slider').value -= 5"});
+            case "volumeDown": // see above.
+                browser.tabs.executeScript(scope.id, {code: "script = document.createElement('script');code = document.createTextNode('(function() {' + 'document.getElementById(\\'expand-volume-slider\\').value -= 5;' + '})();');script.appendChild(code);(document.body || document.head).appendChild(script);"});
                 break;
             case "listFW": // fine
                 browser.tabs.executeScript(scope.id, {code: "document.getElementsByClassName(\"next-button style-scope ytmusic-player-bar\")[0].click()"});
