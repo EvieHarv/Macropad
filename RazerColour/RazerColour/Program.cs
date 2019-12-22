@@ -13,68 +13,54 @@ using System.IO;
 using System.Net.Sockets;
 using System.Net;
 
-namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE WAS A QUICK AND DIRTY JOB TO GET IT TO WORK. 
+namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE WAS A QUICK AND DIRTY JOB TO GET IT TO WORK.
 {
     class Program
     {
-        private static Mutex mutex = null;
+        public static KeyboardCustom currentKeyboard;
+        public static Mutex mutex = null;
 
         static void Main(string[] args) // Args - [Filepath - Relative to "C:\ProgramData\ZRazer\Lightpacks\" or absolute.]
         {
-            bool createdNew;
-            mutex = new Mutex(true, "RazerColor", out createdNew);
+            AppCall callArgs = new AppCall(args);
+            // Create a mutex to confirm it is the only existing process of its type.
+            mutex = new Mutex(true, "RazerColor", out bool createdNew);
+
+            // If its not created new, send its message to the main client.
             if (!createdNew)
             {
-                StartInternalClient(args[0]);
+                string str = string.Join(":", args); // Combine the args back together
+                StartInternalClient(str); // Send it off to the client server
                 return;
             }
-            IChroma chroma = GetInstance().Result;
-            bool state = SwitchColour(args[0], chroma).Result;
+
+            // Fetch a chroma interface
+            IChroma chromaInstance = GetInstance().Result;
+            bool state = SwitchColour(callArgs, chromaInstance).Result;
+
             while (state)
             {
-                Console.WriteLine("Starting new server...");
-                string newColour = StartInternalServer();
-                bool worked = SwitchColour(newColour, chroma).Result; // End program if it didn't work
-                if (!worked) break;
+                Console.WriteLine("Starting new server connection...");
+
+                string incomingData = StartInternalServer();
+                bool switchSuccess = SwitchColour(new AppCall(incomingData.Split(':')), chromaInstance).Result; // End program if it didn't work
+
+                if (switchSuccess == false) break;
             };
-            bool asyncHack1 = Error(chroma).Result;
+
+            Error(chromaInstance).RunSynchronously();
         }
 
-        static async Task<bool> Error(IChroma chroma) // Flashes entire keyboard red.
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                await chroma.Keyboard.SetAllAsync(ColoreColor.Red);
-                await Task.Delay(250);
-                await chroma.Keyboard.SetAllAsync(ColoreColor.Black);
-                await Task.Delay(250);
-            }
-            await chroma.SetAllAsync(ColoreColor.Red);
-            await Task.Delay(1500);
-            return false;
-        }
 
-        static async Task<IChroma> GetInstance()
+        static async Task<bool> SwitchColour(AppCall args, IChroma chroma)
         {
-            var chroma = await ColoreProvider.CreateNativeAsync();
-            await Task.Delay(500);
-            return chroma;
-        }
-        static async Task<bool> SwitchColour(string filePath, IChroma chroma)
-        {
-            if (!File.Exists(filePath)) // Future ethan checking in - what did this do exactly? As stated above, need to redo this entire thing...
-            {
-                if (File.Exists(@"C:\ProgramData\ZRazer\Lightpacks\" + filePath)) filePath = @"C:\ProgramData\ZRazer\Lightpacks\" + filePath;
-                else if (File.Exists(@"C:\ProgramData\ZRazer\Lightpacks\" + filePath + ".rzl")) filePath = @"C:\ProgramData\ZRazer\Lightpacks\" + filePath + ".rzl";
-                else return false;
-            }
-
+            if (args.invalid) return false;
 
             var grid = KeyboardCustom.Create();
 
             ColoreColor clr = ColoreColor.Black;
 
-            foreach (string fline in File.ReadLines(filePath))
+            foreach (string fline in File.ReadLines(args.filePath))
             {
                 string line = fline;
                 if (line.Contains(";")) line = line.Substring(0, line.IndexOf(";"));
@@ -112,18 +98,16 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
             await chroma.Keyboard.SetCustomAsync(grid);
             return true;
         }
-        static string StartInternalServer()
+        static string StartInternalServer() // start the local server as host
         {
             try
             {
                 IPAddress ipAd = IPAddress.Parse("127.0.0.1");
-                // use local m/c IP address, and 
-                // use the same in the client
 
                 /* Initializes the Listener */
                 TcpListener myList = new TcpListener(ipAd, 4496);
 
-                /* Start Listeneting at the specified port */
+                /* Start Listeneting on port */
                 myList.Start();
 
                 Console.WriteLine("The server is running at port 4496...");
@@ -131,9 +115,11 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
                                   myList.LocalEndpoint);
                 Console.WriteLine("Waiting for a connection.....");
 
+                // accept incoming connection
                 Socket s = myList.AcceptSocket();
                 Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
 
+                // decode the recieved data
                 byte[] b = new byte[260];
                 int k = s.Receive(b);
                 Console.WriteLine("Recieved...");
@@ -157,26 +143,31 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
                 return "";
             }
         }
-        static void StartInternalClient(string str)
+        static void StartInternalClient(string str) // Connect to internal server and send message.
         {
             try
             {
+                // tcp protocoll handler
                 TcpClient tcpclnt = new TcpClient();
                 Console.WriteLine("Connecting.....");
 
+                // local server on port 4496
                 tcpclnt.Connect("127.0.0.1", 4496);
-                // use the ipaddress as in the server program
 
                 Console.WriteLine("Connected");
 
+                // get the socket stream
                 Stream stm = tcpclnt.GetStream();
 
+                // encode the data
                 ASCIIEncoding asen = new ASCIIEncoding();
                 byte[] ba = asen.GetBytes(str);
                 Console.WriteLine("Transmitting.....");
 
+                // send the data
                 stm.Write(ba, 0, ba.Length);
 
+                // close the connection
                 tcpclnt.Close();
             }
 
@@ -184,6 +175,26 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
             {
                 Console.WriteLine("Error..... " + e.StackTrace);
             }
+        }
+        
+        static async Task<IChroma> GetInstance()
+        {
+            var chroma = await ColoreProvider.CreateNativeAsync();
+            await Task.Delay(500);
+            return chroma;
+        }
+        static async Task Error(IChroma chroma) // Flashes entire keyboard red.
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                await chroma.Keyboard.SetAllAsync(ColoreColor.Red);
+                await Task.Delay(250);
+                await chroma.Keyboard.SetAllAsync(ColoreColor.Black);
+                await Task.Delay(250);
+            }
+            await chroma.SetAllAsync(ColoreColor.Red);
+            await Task.Delay(1500);
+            return;
         }
     }
 }
