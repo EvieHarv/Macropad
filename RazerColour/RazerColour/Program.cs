@@ -40,7 +40,7 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
 
             while (state)
             {
-                Console.WriteLine("Starting new server connection...");
+                Console.WriteLine("Starting a new server connection...");
 
                 string incomingData = StartInternalServer();
                 bool switchSuccess = SwitchColour(new AppCall(incomingData.Split(':')), chromaInstance).Result; // End program if it didn't work
