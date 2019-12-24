@@ -50,11 +50,11 @@ You must place Colore.dll in the same directory as RazerColor.
 ```rzl
 rgb 00FF00
 
-; for all keys at once, just put ALL at the top. Any keys specified BELOW it will still change color on top of that
+; for all keys at once, just put ALL at the top of your script. Any keys specified BELOW it will still change color on top of that
 
-Logo
+Logo ; the device's razer logo
 
-a ; Letters work (case insensitive)
+a ; All letters work (case insensitive)
 b
 c
 
@@ -111,7 +111,7 @@ Num0
 Num1
 Num9 ; etc.. (Full-Sized numpad keys)
 
-D0 ; top row of keyboard/regular numbers
+D0 ; top row of keyboard/regular numbers/"""!@#$%^&*()""" keys
 D1
 D9
 
@@ -139,5 +139,4 @@ Kor6
 Kor7
 EurPound
 EurBackslash
-
 ```
