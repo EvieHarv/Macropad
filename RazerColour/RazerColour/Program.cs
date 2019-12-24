@@ -17,7 +17,7 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
 {
     class Program
     {
-        public static KeyboardCustom currentKeyboard;
+        public static KeyboardCustom currentKeyboard = KeyboardCustom.Create();
         public static Mutex mutex = null;
 
         static void Main(string[] args) // Args - [Filepath - Relative to "C:\ProgramData\ZRazer\Lightpacks\" or absolute.]
@@ -36,6 +36,7 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
 
             // Fetch a chroma interface
             IChroma chromaInstance = GetInstance().Result;
+
             bool state = SwitchColour(callArgs, chromaInstance).Result;
 
             while (state)
@@ -43,12 +44,10 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
                 Console.WriteLine("Starting a new server connection...");
 
                 string incomingData = StartInternalServer();
-                bool switchSuccess = SwitchColour(new AppCall(incomingData.Split(':')), chromaInstance).Result; // End program if it didn't work
-
-                if (switchSuccess == false) break;
+                state = SwitchColour(new AppCall(incomingData.Split(':')), chromaInstance).Result; // End program if it didn't work
             };
 
-            Error(chromaInstance).RunSynchronously();
+            Error(chromaInstance).Wait();
         }
 
 
@@ -57,6 +56,8 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
             if (args.invalid) return false;
 
             var grid = KeyboardCustom.Create();
+
+            if (args.addWeak || args.addStrong) grid = currentKeyboard;
 
             ColoreColor clr = ColoreColor.Black;
 
@@ -84,17 +85,26 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
                     }
                 }
 
-                if (!Enum.TryParse(line, true, out Key result) && !line.ToLower().StartsWith("rgb"))
+                if (!Enum.TryParse(line, true, out Key currKey) && !line.ToLower().StartsWith("rgb"))
                 {
                     Console.WriteLine("thats not a valid key pls fix");
-                    Console.WriteLine(result.ToString());
+                    Console.WriteLine(currKey.ToString());
                     return false;
                 }
 
-                grid[result] = clr;
+
+                if (args.addWeak)
+                {
+                    if (grid[currKey] == ColoreColor.Black) { grid[currKey] = clr; }
+                }
+                else
+                {
+                    grid[currKey] = clr;
+                }
             }
 
-
+            currentKeyboard = grid;
+            Console.WriteLine("bro");
             await chroma.Keyboard.SetCustomAsync(grid);
             return true;
         }
@@ -179,8 +189,9 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
         
         static async Task<IChroma> GetInstance()
         {
+            Console.WriteLine("Creating a new chroma instance...");
             var chroma = await ColoreProvider.CreateNativeAsync();
-            await Task.Delay(500);
+            await Task.Delay(1000); // Used to be 500, but apparently the razer API got slower or something. 
             return chroma;
         }
         static async Task Error(IChroma chroma) // Flashes entire keyboard red.

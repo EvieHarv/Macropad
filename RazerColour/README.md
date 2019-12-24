@@ -34,3 +34,9 @@ razerColour [filepath]
 -a
     Add-weak. Same as above, except that the older script will take precedence.
 ```
+
+## Dependencies
+
+---
+
+You must place Colore.dll in the same directory as RazerColor.

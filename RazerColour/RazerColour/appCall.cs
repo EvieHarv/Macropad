@@ -31,7 +31,7 @@ namespace RazerColour
                 if (!arg.StartsWith("-")) { argTemp = arg; i++; }
             }
 
-            if (i > 1) invalid = true; // If 1+ arg, invalid.
+            if (i != 1) invalid = true; // If !(1 arg), invalid.
 
 
             filePath = RetrievePath(argTemp);
