@@ -85,7 +85,9 @@ namespace RazerColour // THIS ENTIRE PROGRAM NEEDS REWORKING. ITS CURRENT STATE 
                     }
                 }
 
-                if (!Enum.TryParse(line, true, out Key currKey) && !line.ToLower().StartsWith("rgb"))
+                if (line.ToLower().StartsWith("all")) { grid.Set(clr); }
+
+                if (!Enum.TryParse(line, true, out Key currKey) && !line.ToLower().StartsWith("rgb") && !line.ToLower().StartsWith("all")) // horrible code hours
                 {
                     Console.WriteLine("thats not a valid key pls fix");
                     Console.WriteLine(currKey.ToString());

@@ -7,13 +7,15 @@ Scripts must be placed into `C:\ProgramData\ZRazer\Lightpacks`, or lightpack loc
 General structure is
 
 ```rzl
-rgb [rgb value] ; The below keys are changed to [rgb value] (Comments denoted by ";")
+; Comments denoted by a semicolon
+
+rgb 000000 ; The below keys are changed to the RGB value 000000
 
 key1
 key2
 key3 ; etc...
 
-rgb [second rgb value] ; Now all below keys will be second value
+rgb ffffff ; Now all below keys will be the second value ffffff
 
 key4
 key5
@@ -40,3 +42,102 @@ razerColour [filepath]
 ---
 
 You must place Colore.dll in the same directory as RazerColor.
+
+## All available keys and how to write them
+
+---
+
+```rzl
+rgb 00FF00
+
+; for all keys at once, just put ALL at the top. Any keys specified BELOW it will still change color on top of that
+
+Logo
+
+a ; Letters work (case insensitive)
+b
+c
+
+Backspace    ; self explanatory
+CapsLock
+PrintScreen
+Scroll
+Pause
+Insert
+Home
+PageUp
+PageDown
+Delete
+Enter
+LeftControl
+LeftWindows
+LeftAlt
+LeftShift
+RightShift
+RightAlt
+Function
+RightMenu
+RightControl
+End
+Tab
+Space
+NumLock
+NumDivide
+NumMultiply
+NumSubtract
+NumAdd
+NumEnter
+NumDecimal
+
+
+Up    ; arrow keys
+Down
+Left
+Right
+
+OemTilde    ; Not my decision to make these all Oem-Something, but they're self explanatory
+OemMinus
+OemEquals
+OemLeftBracket
+OemRightBracket
+OemBackslash
+OemSemicolon
+OemApostrophe
+OemComma
+OemPeriod
+OemSlash
+
+Num0
+Num1
+Num9 ; etc.. (Full-Sized numpad keys)
+
+D0 ; top row of keyboard/regular numbers
+D1
+D9
+
+F1 ; function keys
+F2
+F12
+
+Macro1
+Macro2
+Macro3
+Macro4
+Macro5
+
+JpnYen    ; honestly no clue, but Colore supports them so sure go ahead if you need these
+JpnSlash
+Jpn3
+Jpn4
+Jpn5
+KorPipe
+Kor2      ; you'd think we would have Kor1, but it appears not.
+Kor3
+Kor4
+Kor5
+Kor6
+Kor7
+EurPound
+EurBackslash
+
+```
