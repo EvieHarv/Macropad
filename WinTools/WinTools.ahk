@@ -94,7 +94,7 @@ Return
 ;		2 = Youtube
 ;		3 = Discord
 ;		4 = VoiceMod
-;		5 = AppSwap
+;		5 = LED
 
 switchState(state)
 {
@@ -136,7 +136,7 @@ switchState(state)
 		switchLighting("NumpadWhite")
 		return
 	}
-	if (state == 5) ; AppSwap
+	if (state == 5) ; LED
 	{
 		NumpadState = 5
 		switchLighting("NumpadSwap")
@@ -454,7 +454,7 @@ state4(num) ; VoiceMod
 	}
 }
 return
-state5(num) ; AppSwap
+state5(num) ; LED
 {
 	if (num == 0)
 	{
