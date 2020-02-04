@@ -11,6 +11,7 @@ SetWinDelay,3 ; Winmover.ahk startup component.
 CoordMode,Mouse ; Winmover.ahk startup component.
 
 GLOBAL NumpadState = 0
+GLOBAL MacroKeysLit = 0
 switchLighting("NumpadBlank")
 SetNumLockState, on
 return
@@ -109,37 +110,37 @@ switchState(state)
 	if (state == 0) ; Closed (Use NumpadBlank for instant re-lighting.)
 	{
 		NumpadState = 0
-		switchLighting("NumpadBlank")
+		switchLighting("-A NumpadBlank")
 		return
 	}
 	if (state == 1) ; Switcher (Metastate)
 	{
 		NumpadState = 1
-		switchLighting("NumpadSwitcher")
+		switchLighting("-A NumpadSwitcher")
 		return
 	}
 	if (state == 2) ; Youtube
 	{
 		NumpadState = 2
-		switchLighting("NumpadRed")
+		switchLighting("-A NumpadRed")
 		return
 	}
 	if (state == 3) ; Discord
 	{
 		NumpadState = 3
-		switchLighting("NumpadDiscord")
+		switchLighting("-A NumpadDiscord")
 		return
 	}
 	if (state == 4) ; VoiceMod
 	{
 		NumpadState = 4
-		switchLighting("NumpadWhite")
+		switchLighting("-A NumpadWhite")
 		return
 	}
 	if (state == 5) ; LED
 	{
 		NumpadState = 5
-		switchLighting("NumpadSwap")
+		switchLighting("-A NumpadSwap")
 	}
 }
 return
@@ -263,7 +264,16 @@ state1(num) ; Switcher
 	}
 	if(num == 10)
 	{
-		switchState(0)
+		if (MacroKeysLit == 1)
+		{
+			switchLighting("-A BlankMacros")
+			MacroKeysLit = 0
+		}
+		else
+		{
+			switchLighting("-A WhiteMacros")
+			MacroKeysLit = 1
+		}
 		return
 	}
 }
@@ -517,16 +527,16 @@ return
 
 ; Function calling RazerColour app 5 in order to switch lighting profile.
 ; Can also call it with "Close" to kill all app instances.
-switchLighting(profile)
+switchLighting(args)
 {
-	if (profile == "close")
+	if (args == "close")
 	{
 		Process, Close, RazerColour.exe
 		Sleep, 50 ; 50ms sleep to make sure it closes
 		return
 	}
 
-	Run "C:\ProgramData\ZRazer\RazerColour.exe" %profile%,,Hide
+	Run "C:\ProgramData\ZRazer\RazerColour.exe" %args%,,Hide
 	return
 }
 return
