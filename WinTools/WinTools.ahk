@@ -580,6 +580,13 @@ Return
 
 F22::
 	Run nircmd cmdwait 500 monitor off
+	if (MacroKeysLit == 1)
+	{
+		switchLighting("-A BlankMacros")
+		MacroKeysLit = 0
+	}
+	Sleep, 10
+	switchState(0)
 Return
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
