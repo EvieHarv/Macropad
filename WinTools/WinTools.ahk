@@ -596,7 +596,11 @@ Return
 XButton2::s
 #IfWinActive
 
-#IfWinNotActive, ahk_exe javaw.exe
+; #IfWinNotActive, ahk_exe javaw.exe
+
+#if, ! (WinActive("ahk_exe javaw.exe") or WinActive("ahk_exe Overwatch.exe") or WinActive("ahk_class UnrealWindow"))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -683,3 +687,5 @@ XButton1 & MButton:: 								 	 	 	 	 	 	 	 	 	 	 		  	   ; Minimizes
     MouseGetPos,,,KDE_id
     PostMessage,0x112,0xf020,,,ahk_id %KDE_id%
 return
+
+#If
