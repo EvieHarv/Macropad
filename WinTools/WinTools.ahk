@@ -140,7 +140,7 @@ switchState(state)
 	if (state == 5) ; LED
 	{
 		NumpadState = 5
-		switchLighting("-A NumpadSwap")
+		switchLighting("-A NumpadLED")
 	}
 }
 return
@@ -398,7 +398,7 @@ state3(num) ; Discord
 	}
 	if(num == 10)
 	{
-		ControlSend,ahk_parent,{Esc}, ahk_exe DiscordCanary.exe
+		ControlSend,ahk_parent,mute{Enter}, ahk_exe DotBot.exe
 		return
 	}
 
@@ -466,9 +466,12 @@ state4(num) ; VoiceMod
 return
 state5(num) ; LED
 {
+	whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if (num == 0)
 	{
-		
+		whr.Open("GET", "http://10.0.2.63/LED?set=TurnOff", False)
+		whr.SetRequestHeader("set", "Vibe")
+		whr.Send()
 	}
 	if (num == 1)
 	{
@@ -476,7 +479,9 @@ state5(num) ; LED
 	}
 	if (num == 2)
 	{
-
+		whr.Open("GET", "http://10.0.2.63/LED?set=SmoothSnake", False)
+		whr.SetRequestHeader("set", "Vibe")
+		whr.Send()
 	}
 	if (num == 3)
 	{
@@ -488,7 +493,9 @@ state5(num) ; LED
 	}
 	if (num == 5)
 	{
-
+		whr.Open("GET", "http://10.0.2.63/LED?set=Vibe", False)
+		whr.SetRequestHeader("set", "Vibe")
+		whr.Send()
 	}
 	if (num == 6)
 	{
@@ -500,7 +507,9 @@ state5(num) ; LED
 	}
 	if (num == 8)
 	{
-
+		whr.Open("GET", "http://10.0.2.63/LED?set=Blink", False)
+		whr.SetRequestHeader("set", "Vibe")
+		whr.Send()
 	}
 	if (num == 9)
 	{
@@ -585,6 +594,11 @@ F22::
 		switchLighting("-A BlankMacros")
 		MacroKeysLit = 0
 	}
+	whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	whr.Open("GET", "http://leds.local/LED?set=TurnOff", False)
+	whr.SetRequestHeader("set", "Vibe")
+	whr.Send()
+
 	Sleep, 10
 	switchState(0)
 Return
@@ -592,8 +606,6 @@ Return
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Handles WinMover.ahk (M4 + Mouse)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#IfWinActive, ahk_exe javaw.exe
-XButton2::s
 #IfWinActive
 
 ; #IfWinNotActive, ahk_exe javaw.exe
